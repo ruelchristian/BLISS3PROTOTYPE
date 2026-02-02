@@ -1,0 +1,7 @@
+{
+  "name": "Bliss III Admin Office",
+  "description": "The official Administrative & Information System for the Bliss III community, offering streamlined service management and AI-powered resident support.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
