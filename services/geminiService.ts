@@ -24,7 +24,7 @@ export const chatWithGemini = async (history: { role: 'user' | 'model', message:
     model: 'gemini-3-pro-preview',
     history: history.map(h => ({ role: h.role, parts: [{ text: h.message }] })),
     config: {
-      systemInstruction: 'You are the intelligent concierge for Bliss III Admin Office. Your goal is to help residents with queries about Bliss III community services, maintenance, and administrative procedures. Be polite, community-focused, and efficient.',
+      systemInstruction: 'You are the intelligent concierge for Pasig Bliss III Admin Office. Your goal is to help residents with queries about Pasig Bliss III community services, maintenance, and administrative procedures. Be polite, community-focused, and efficient.',
     }
   });
 

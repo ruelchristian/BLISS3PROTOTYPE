@@ -1,7 +1,5 @@
 {
-  "name": "Bliss III Admin Office",
-  "description": "The official Administrative & Information System for the Bliss III community, offering streamlined service management and AI-powered resident support.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "name": "Pasig Bliss III Information System",
+  "description": "The official Administrative & Information System for the Pasig Bliss III community, providing streamlined residence management and community services.",
+  "requestFramePermissions": []
 }

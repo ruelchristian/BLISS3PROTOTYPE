@@ -23,25 +23,25 @@ import {
 } from 'recharts';
 
 const data = [
-  { name: 'Jan', requests: 120, payments: 450 },
-  { name: 'Feb', requests: 150, payments: 380 },
-  { name: 'Mar', requests: 200, payments: 890 },
-  { name: 'Apr', requests: 178, payments: 620 },
-  { name: 'May', requests: 210, payments: 540 },
-  { name: 'Jun', requests: 190, payments: 700 },
+  { name: 'Jan', requests: 5, payments: 2500 },
+  { name: 'Feb', requests: 8, payments: 5000 },
+  { name: 'Mar', requests: 12, payments: 7500 },
+  { name: 'Apr', requests: 10, payments: 10000 },
+  { name: 'May', requests: 15, payments: 12500 },
+  { name: 'Jun', requests: 4, payments: 2500 },
 ];
 
 const Dashboard: React.FC<{ user: User }> = ({ user }) => {
-  // Security check - double-ensure residents can't see this even if they try routing
-  if (user.role !== UserRole.ADMIN) {
-    return <Navigate to="/welcome" />;
+  // Security check - allow both Admin and Superadmin
+  if (user.role !== UserRole.ADMIN && user.role !== UserRole.SUPERADMIN) {
+    return <Navigate to="/login" />;
   }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-[#003067] tracking-tight">Bliss III Command Center</h2>
+          <h2 className="text-2xl font-black text-[#003067] tracking-tight">Pasig Bliss III Command Center</h2>
           <p className="text-gray-500 font-medium">Administrative overview of community operations.</p>
         </div>
         <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-blue-50 flex items-center gap-3">
@@ -54,23 +54,23 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard 
           title="Total Residents" 
-          value="842" 
+          value="35" 
           icon={Users}
-          trend="+4 this week"
+          trend="+2 this month"
           color="blue"
         />
         <StatCard 
           title="Pending Requests" 
-          value="14" 
+          value="4" 
           icon={ClipboardList}
-          trend="3 High Priority"
+          trend="1 High Priority"
           color="blue"
         />
         <StatCard 
-          title="Revenue (Jun)" 
-          value="$24,800" 
+          title="Tax Revenue (Jun)" 
+          value="₱2,500" 
           icon={Activity}
-          trend="98% collected"
+          trend="33% collected"
           color="blue"
         />
         <StatCard 
@@ -102,7 +102,7 @@ const Dashboard: React.FC<{ user: User }> = ({ user }) => {
                   cursor={{fill: '#f8fafc'}}
                   contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
                 />
-                <Bar dataKey="payments" fill="#0068B6" radius={[4, 4, 0, 0]} name="Payments ($)" />
+                <Bar dataKey="payments" fill="#0068B6" radius={[4, 4, 0, 0]} name="Payments (₱)" />
                 <Bar dataKey="requests" fill="#003067" radius={[4, 4, 0, 0]} name="Svc Requests" />
               </BarChart>
             </ResponsiveContainer>

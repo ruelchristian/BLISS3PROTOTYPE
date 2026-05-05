@@ -1,33 +1,29 @@
 
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
+// Fix: Import icons from 'lucide-react' instead of './types'
 import { 
   LayoutDashboard, 
   Users, 
   CreditCard, 
   ClipboardList, 
-  Bell, 
   LogOut, 
   Menu, 
   X, 
-  PhoneCall, 
   User as UserIcon,
-  Home,
-  PlusCircle,
-  History,
+  BarChart3,
   ShieldCheck
 } from 'lucide-react';
-import { User, UserRole } from './types';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import Welcome from './pages/Welcome';
-import ResidentsList from './pages/Admin/ResidentsList';
+import Buildings from './pages/Admin/Buildings';
 import ServiceRequests from './pages/Admin/ServiceRequests';
 import Payments from './pages/Admin/Payments';
-import Announcements from './pages/Announcements';
-import Profile from './pages/Resident/Profile';
+import Analytics from './pages/Admin/Analytics';
+import UserManagement from './pages/Admin/UserManagement';
 import SubmitRequest from './pages/Resident/SubmitRequest';
-import EmergencyContacts from './pages/EmergencyContacts';
+// Import User and UserRole from types.ts
+import { User, UserRole } from './types';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(() => {
@@ -55,44 +51,40 @@ const App: React.FC = () => {
           element={user ? <MainLayout user={user} onLogout={handleLogout} /> : <Navigate to="/login" />}
         >
           {/* Landing page logic */}
-          <Route path="/" element={user?.role === UserRole.ADMIN ? <Navigate to="/admin/dashboard" /> : <Navigate to="/welcome" />} />
+          <Route path="/" element={<Navigate to="/admin/dashboard" />} />
           
           {/* Admin Routes */}
           <Route 
             path="/admin/dashboard" 
-            element={user?.role === UserRole.ADMIN ? <Dashboard user={user!} /> : <Navigate to="/welcome" />} 
+            element={<Dashboard user={user!} />} 
           />
           <Route 
-            path="/admin/residents" 
-            element={user?.role === UserRole.ADMIN ? <ResidentsList /> : <Navigate to="/welcome" />} 
+            path="/admin/buildings" 
+            element={<Buildings />} 
           />
           <Route 
             path="/admin/requests" 
-            element={user?.role === UserRole.ADMIN ? <ServiceRequests /> : <Navigate to="/welcome" />} 
+            element={<ServiceRequests />} 
           />
           <Route 
             path="/admin/payments" 
-            element={user?.role === UserRole.ADMIN ? <Payments /> : <Navigate to="/welcome" />} 
+            element={<Payments />} 
+          />
+          <Route 
+            path="/admin/analytics" 
+            element={<Analytics />} 
+          />
+          <Route 
+            path="/admin/users" 
+            element={<UserManagement />} 
+          />
+          <Route 
+            path="/admin/create-request" 
+            element={<SubmitRequest user={user!} />} 
           />
           
-          {/* Resident Routes */}
-          <Route path="/welcome" element={<Welcome user={user!} />} />
-          <Route 
-            path="/resident/profile" 
-            element={user?.role === UserRole.RESIDENT ? <Profile user={user!} /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/resident/submit-request" 
-            element={user?.role === UserRole.RESIDENT ? <SubmitRequest user={user!} /> : <Navigate to="/" />} 
-          />
-          <Route 
-            path="/resident/history" 
-            element={user?.role === UserRole.RESIDENT ? <Payments residentId={user?.id} /> : <Navigate to="/" />} 
-          />
-
-          {/* Shared Routes */}
-          <Route path="/announcements" element={<Announcements isAdmin={user?.role === UserRole.ADMIN} />} />
-          <Route path="/emergency" element={<EmergencyContacts isAdmin={user?.role === UserRole.ADMIN} />} />
+          {/* Catch-all redirect to dashboard */}
+          <Route path="*" element={<Navigate to="/admin/dashboard" />} />
         </Route>
       </Routes>
     </Router>
@@ -104,25 +96,14 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
   const location = useLocation();
   const navigate = useNavigate();
 
-  const adminNav = [
+  const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
-    { name: 'Residents', icon: Users, path: '/admin/residents' },
-    { name: 'Service Queue', icon: ClipboardList, path: '/admin/requests' },
+    { name: 'Buildings', icon: Users, path: '/admin/buildings' },
+    { name: 'Service Request', icon: ClipboardList, path: '/admin/requests' },
     { name: 'Payments', icon: CreditCard, path: '/admin/payments' },
-    { name: 'Announcements', icon: Bell, path: '/announcements' },
-    { name: 'Emergency', icon: PhoneCall, path: '/emergency' },
+    { name: 'Analytics', icon: BarChart3, path: '/admin/analytics' },
+    { name: 'User Management', icon: ShieldCheck, path: '/admin/users' },
   ];
-
-  const residentNav = [
-    { name: 'Home', icon: Home, path: '/welcome' },
-    { name: 'Announcements', icon: Bell, path: '/announcements' },
-    { name: 'Request', icon: PlusCircle, path: '/resident/submit-request' },
-    { name: 'Payments', icon: History, path: '/resident/history' },
-    { name: 'Emergency', icon: PhoneCall, path: '/emergency' },
-    { name: 'Profile', icon: UserIcon, path: '/resident/profile' },
-  ];
-
-  const currentNav = user.role === UserRole.ADMIN ? adminNav : residentNav;
 
   const handleLogoutClick = () => {
     onLogout();
@@ -139,9 +120,9 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
           </button>
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-[#0068B6] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">B3</span>
+              <span className="text-white font-bold text-sm">P</span>
             </div>
-            <h1 className="font-bold text-lg text-[#003067] hidden sm:block">Bliss III Admin Office</h1>
+            <h1 className="font-bold text-lg text-[#003067] hidden sm:block">Pasig Bliss III</h1>
           </Link>
         </div>
 
@@ -169,14 +150,14 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
               <div className="p-6 border-b flex justify-between items-center bg-[#003067] text-white">
                 <div className="flex items-center gap-2">
                    <div className="w-6 h-6 bg-white rounded-md flex items-center justify-center">
-                    <span className="text-[#003067] font-bold text-xs">B</span>
+                    <span className="text-[#003067] font-bold text-xs">P</span>
                   </div>
-                  <span className="font-bold">Bliss III</span>
+                  <span className="font-bold">Pasig Bliss III</span>
                 </div>
                 <button onClick={() => setSidebarOpen(false)}><X className="w-6 h-6 text-white/70" /></button>
               </div>
               <nav className="p-4 flex flex-col gap-2">
-                {currentNav.map((item) => (
+                {navItems.map((item) => (
                   <Link
                     key={item.path}
                     to={item.path}
@@ -205,7 +186,7 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
 
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex flex-col w-64 bg-[#003067] p-4 gap-2">
-          {currentNav.map((item) => (
+          {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -219,7 +200,7 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
           ))}
           <div className="mt-auto pt-4 border-t border-blue-900/50">
              <div className="p-3 bg-blue-900/30 rounded-xl mb-4 text-[10px] text-blue-200 font-bold uppercase tracking-widest text-center">
-              Admin Control Panel
+              Admin Information System
             </div>
             <button
               onClick={handleLogoutClick}
@@ -240,24 +221,6 @@ const MainLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLo
           </div>
         </main>
       </div>
-
-      {/* Mobile Bottom Navigation (Resident Only) */}
-      {user.role === UserRole.RESIDENT && (
-        <nav className="md:hidden bg-white/80 glass-card border-t flex justify-around py-2 px-2 sticky bottom-0 z-50">
-          {residentNav.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
-                location.pathname === item.path ? 'text-[#0068B6]' : 'text-gray-400'
-              }`}
-            >
-              <item.icon className="w-5 h-5" />
-              <span className="text-[10px] font-bold uppercase tracking-tight">{item.name}</span>
-            </Link>
-          ))}
-        </nav>
-      )}
     </div>
   );
 };
